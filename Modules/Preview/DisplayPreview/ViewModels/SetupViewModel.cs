@@ -257,7 +257,7 @@ namespace VixenModules.Preview.DisplayPreview.ViewModels
             {
                 // Open document
                 var imageFile = new FileInfo(openFileDialog.FileName);
-                var destFileName = Path.Combine(DisplayPreviewModuleDescriptor.ModulePath, "Background" + imageFile.Extension);
+                var destFileName = Path.Combine(DisplayPreviewModuleDescriptor.ModulePath, imageFile.Name);
                 var sourceFileName = imageFile.FullName;
                 if (sourceFileName != destFileName)
                 {
@@ -278,7 +278,7 @@ namespace VixenModules.Preview.DisplayPreview.ViewModels
                     var answer =
                         MessageBox.Show(
                                         string.Format(
-                                                      "Do you want to resize you display to match the image resolution of {0}w x {1}h?", 
+                                                      "Do you want to resize your display to match the image resolution of {0}w x {1}h?", 
                                                       imageWidth, 
                                                       imageHeight), 
                                         "Resize the display?", 
