@@ -58,6 +58,8 @@ namespace VixenModules.Editor.TimedSequenceEditor
 
 		private float _timingChangeDelta = 0.25f;
 
+        private double _defaultEffectDuration = 2;
+
 		private static readonly DataFormats.Format _clipboardFormatName = DataFormats.GetFormat(typeof(TimelineElementsClipboardData).FullName);
 
 		#endregion
@@ -854,7 +856,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 
 		private void timelineControl_DataDropped(object sender, TimelineDropEventArgs e) {
 			Guid effectGuid = (Guid)e.Data.GetData(DataFormats.Serializable);
-			TimeSpan duration = TimeSpan.FromSeconds(2.0); // TODO: need a default value here. I suggest a per-effect default.
+			TimeSpan duration = TimeSpan.FromSeconds(_defaultEffectDuration); // TODO: need a default value here. I suggest a per-effect default.
 			TimeSpan startTime = Util.Min(e.Time, (_sequence.Length - duration)); // Ensure the element is inside the grid.
 			addNewEffectById(effectGuid, e.Row, startTime, duration);
 		}
@@ -1440,6 +1442,22 @@ namespace VixenModules.Editor.TimedSequenceEditor
 				}
 			}
 		}
+
+        // This is for the quick new default field for default effect durations
+        // Whatever is put into this field will be used for the duration of effects dropped onto editor
+        private void defaultEffectDuration_TextChanged(object sender, EventArgs e)
+        {
+            double value;
+            if (double.TryParse(defaultEffectDuration.Text, out value))
+            {
+                if (value > 0)
+                    _defaultEffectDuration = value;
+                else
+                    MessageBox.Show("Please choose a value in seconds greater than 0");
+            }
+            else
+                MessageBox.Show("Invalid number - Please choose a value in seconds greater than 0");
+        }
 	}
 
 	[Serializable]
