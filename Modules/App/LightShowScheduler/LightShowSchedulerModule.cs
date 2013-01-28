@@ -10,6 +10,8 @@ using Vixen.Module;
 using Vixen.Module.App;
 using Timer = System.Timers.Timer;
 using System.Windows.Forms;
+using VixenModules.App.LightShowScheduler.Data;
+using System.IO;
 
 namespace VixenModules.App.LightShowScheduler
 {
@@ -19,6 +21,13 @@ namespace VixenModules.App.LightShowScheduler
         SynchronizationContext _synchronizationContext;
         SchedulerData _data;
         private const string ID_ROOT = "SCHEDULER_ROOT";
+        Timer scheduleTimer;
+        public LightShowSchedulerModule()
+        {
+            scheduleTimer = new Timer(5000);
+            scheduleTimer.Elapsed += scheduleTimer_Elapsed;
+        }
+
 
         public override IApplication Application
         {
@@ -48,11 +57,7 @@ namespace VixenModules.App.LightShowScheduler
                 return _application != null && _application.AppCommands != null;
             }
         }
-        private void _SetEnableState(bool value)
-        {
-            VixenSystem.Logging.Schedule("Turning scheduler " + (value ? "ON" : "OFF"));
-            //    Timer.Enabled = value;
-        }
+
         private void _AddApplicationMenu()
         {
             if (appSupportsCommands)
@@ -114,5 +119,82 @@ namespace VixenModules.App.LightShowScheduler
             VixenSystem.Logging.Schedule("Light Show Scheduler module unloaded.");
             VixenSystem.Logs.RemoveLog("LightSHowSchedule");
         }
+
+        private void _SetEnableState(bool value)
+        {
+            VixenSystem.Logging.Schedule(string.Format("Turning scheduler {0}", (value ? "ON" : "OFF")));
+            scheduleTimer.Enabled = value;
+        }
+
+        private readonly Dictionary<string, IProgramContext> _cachedPrograms;
+        private readonly Dictionary<IProgramContext, ScheduleItem> _currentContexts;
+        void scheduleTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            _data.Schedules.ForEach(sched =>
+            {
+                if (sched.IsScheduled())
+                {
+                    Execute(sched);
+                }
+            });
+        }
+        private void Execute(ScheduleItem item)
+        {
+
+            _SetEnableState(false);
+            foreach (var pro in item.Programs)
+            {
+                string filepath = Path.Combine(Program.ProgramDirectory, pro + ".pro");
+                try
+                {
+                    if (!item.IsScheduled())
+                        return;
+
+
+                    VixenSystem.Logging.Schedule(string.Format("Executing scheduled item: {0}", filepath));
+                    IProgramContext context;
+
+                    if (_cachedPrograms.ContainsKey(filepath))
+                    {
+                        VixenSystem.Logging.Schedule("Item found in cached programs. Reusing.");
+                        context = _cachedPrograms[filepath];
+                    }
+                    else
+                    {
+                        VixenSystem.Logging.Schedule("Item NOT found in cached programs. Generating...");
+                        Program program = Vixen.Services.ApplicationServices.LoadProgram(filepath);
+                        context = VixenSystem.Contexts.CreateProgramContext(new ContextFeatures(ContextCaching.ContextLevelCaching), program);
+
+                        foreach (ISequence sequence in context.Program.Sequences)
+                        {
+                            VixenSystem.Logging.Schedule(string.Format("  - Prerendering effects for sequence: {0}", sequence.Name));
+                            foreach (IEffectNode effectNode in sequence.SequenceData.EffectData.Cast<IEffectNode>())
+                            {
+                                effectNode.Effect.PreRender();
+                            }
+                        }
+
+                        _cachedPrograms[filepath] = context;
+                    }
+
+
+                    _currentContexts[context] = item;
+                    item.IsExecuting = true;
+                    item.LastExecutedAt = DateTime.Now;
+
+                    VixenSystem.Logging.Schedule("Starting execution.");
+
+                    context.Start();
+                }
+                catch (Exception ex)
+                {
+                    VixenSystem.Logging.Schedule(string.Format("Could not execute sequence {0};{1}", filepath, ex.Message));
+                }
+            }
+            _SetEnableState(true);
+
+
+        }
+
     }
 }

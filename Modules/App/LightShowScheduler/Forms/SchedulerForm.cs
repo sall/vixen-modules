@@ -161,7 +161,7 @@ namespace VixenModules.App.LightShowScheduler.Forms
 
         void EnableProgramItem(string Name)
         {
-            foreach (ToolStripMenuItem item in programsToolStripMenuItem.DropDownItems)
+            foreach (ToolStripItem item in programsToolStripMenuItem.DropDownItems)
             {
                 if (item.Text.Equals(Name))
                     item.Enabled = true;
@@ -170,7 +170,7 @@ namespace VixenModules.App.LightShowScheduler.Forms
 
         void DisableProgramItem(string Name)
         {
-            foreach (ToolStripMenuItem item in programsToolStripMenuItem.DropDownItems)
+            foreach (ToolStripItem item in programsToolStripMenuItem.DropDownItems)
             {
                 if (item.Text.Equals(Name))
                     item.Enabled = false;
@@ -197,28 +197,7 @@ namespace VixenModules.App.LightShowScheduler.Forms
         }
 
 
-        void FillProgramsToolMenu()
-        {
-            foreach (ToolStripMenuItem item in programsToolStripMenuItem.DropDownItems)
-            {
-                item.Click -= programItem_Click;
 
-            }
-
-            programsToolStripMenuItem.DropDownItems.Clear();
-            new DirectoryInfo(Program.ProgramDirectory).GetFiles("*.pro").ToList().ForEach(a =>
-            {
-                ToolStripMenuItem item = new ToolStripMenuItem(a.Name.Replace(a.Extension, ""));
-
-
-                programsToolStripMenuItem.DropDownItems.Add(item);
-                item.Click += programItem_Click;
-                if (this.tabControl1.TabPages.ContainsKey(item.Text))
-                    item.Enabled = false;
-            });
-
-
-        }
         #endregion
 
 
@@ -236,7 +215,18 @@ namespace VixenModules.App.LightShowScheduler.Forms
             currentTab = tabControl1.SelectedTab;
             if (currentTab.Tag == (object)"ProgramTab" || currentTab.Tag == (object)"ScheduleTab")
             {
-                EnableProgramItem(currentTab.Text);
+                switch (currentTab.Tag.DynamicCast<string>())
+                {
+                    case "ProgramTab":
+                        EnableProgramItem(currentTab.Text);
+                        break;
+                    case "ScheduleTab":
+                        EnableScheduleItem(currentTab.Text);
+                        break;
+                    default:
+                        break;
+                }
+
                 tabControl1.TabPages.Remove(currentTab);
                 currentTab.Dispose();
                 currentTab = null;
@@ -370,14 +360,22 @@ namespace VixenModules.App.LightShowScheduler.Forms
             FillSchedulesToolMenu();
         }
 
-        private void programToolStripMenuItem_Click(object sender, EventArgs e)
+        void EnableScheduleItem(string Name)
         {
-            LoadProgramToTab();
+            foreach (ToolStripItem item in schedulesToolStripMenuItem.DropDownItems)
+            {
+                if (item.Text.Equals(Name))
+                    item.Enabled = true;
+            }
         }
 
-        private void scheduleToolStripMenuItem_Click(object sender, EventArgs e)
+        void DisableScheduleItem(string Name)
         {
-
+            foreach (ToolStripItem item in schedulesToolStripMenuItem.DropDownItems)
+            {
+                if (item.Text.Equals(Name))
+                    item.Enabled = false;
+            }
         }
 
 
@@ -415,7 +413,34 @@ namespace VixenModules.App.LightShowScheduler.Forms
 
 
         }
+        void FillProgramsToolMenu()
+        {
+            List<ToolStripItem> itemsToRemove = new List<ToolStripItem>();
+            foreach (ToolStripItem item in programsToolStripMenuItem.DropDownItems)
+            {
+                if (item.Tag != null)
+                {
+                    itemsToRemove.Add(item);
+                    item.Click -= programItem_Click;
+                }
+            }
+            itemsToRemove.ForEach(t => programsToolStripMenuItem.DropDownItems.Remove(t));
 
+
+            new DirectoryInfo(Program.ProgramDirectory).GetFiles("*.pro").ToList().ForEach(a =>
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem(a.Name.Replace(a.Extension, ""));
+
+                item.Tag = a.FullName;
+
+                programsToolStripMenuItem.DropDownItems.Add(item);
+                item.Click += programItem_Click;
+                if (this.tabControl1.TabPages.ContainsKey(item.Text))
+                    item.Enabled = false;
+            });
+
+
+        }
         void scheduleItem_Click(object sender, EventArgs e)
         {
             var obj = (ToolStripDropDownItem)sender;
@@ -441,7 +466,15 @@ namespace VixenModules.App.LightShowScheduler.Forms
                 sched.Dock = DockStyle.Fill;
                 this.tabControl1.TabPages.Add(tab);
                 this.tabControl1.SelectedTab = tab;
+                DisableScheduleItem(schedule.Name);
             }
         }
+
+        private void newProgramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadProgramToTab();
+        }
+
+
     }
 }

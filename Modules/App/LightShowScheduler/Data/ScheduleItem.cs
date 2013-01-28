@@ -13,6 +13,7 @@ namespace VixenModules.App.LightShowScheduler.Data
     [KnownType(typeof(ScheduleItem))]
     public class ScheduleItem
     {
+        #region ctor
         public ScheduleItem()
         {
             Init();
@@ -29,7 +30,10 @@ namespace VixenModules.App.LightShowScheduler.Data
         {
             Monday = Tuesday = Wednesday = Thursday = Friday = Saturday = Sunday = new List<ScheduleTime>();
             ID = Guid.NewGuid();
+            StartDate= EndDate = DateTime.Now;
+
         }
+        #endregion
 
         public ScheduleItem(TimeSpan[][][] timeFrame)
         {
@@ -218,7 +222,7 @@ namespace VixenModules.App.LightShowScheduler.Data
 
 
         [DataMember]
-        public IList<string> Programs { get; set; }
+        public List<string> Programs { get; set; }
 
         [DataMember]
         public string Name
@@ -231,8 +235,10 @@ namespace VixenModules.App.LightShowScheduler.Data
         public bool Random { get; set; }
 
         public bool IsExecuting;
+        
+        [DataMember]
+        public DateTime LastExecutedAt { get; set; }
 
-        public DateTime LastExecutedAt;
         public TimeSpan[][][] ToTimeSpanArray()
         {
             List<TimeSpan[][]> results = new List<TimeSpan[][]>();
@@ -301,6 +307,7 @@ namespace VixenModules.App.LightShowScheduler.Data
             return results.ToArray();
 
         }
+
     }
 
 

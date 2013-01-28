@@ -30,19 +30,18 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.programsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.schedulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newScheduleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.programToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.scheduleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.SuspendLayout();
@@ -62,7 +61,6 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.closeProgramToolStripMenuItem,
             this.toolStripSeparator1,
@@ -70,15 +68,6 @@
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
-            // 
-            // newToolStripMenuItem
-            // 
-            this.newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.programToolStripMenuItem,
-            this.scheduleToolStripMenuItem});
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.newToolStripMenuItem.Text = "New";
             // 
             // deleteToolStripMenuItem
             // 
@@ -110,9 +99,24 @@
             // 
             // programsToolStripMenuItem
             // 
+            this.programsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newProgramToolStripMenuItem,
+            this.toolStripSeparator3});
             this.programsToolStripMenuItem.Name = "programsToolStripMenuItem";
             this.programsToolStripMenuItem.Size = new System.Drawing.Size(70, 20);
             this.programsToolStripMenuItem.Text = "&Programs";
+            // 
+            // newProgramToolStripMenuItem
+            // 
+            this.newProgramToolStripMenuItem.Name = "newProgramToolStripMenuItem";
+            this.newProgramToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newProgramToolStripMenuItem.Text = "&New";
+            this.newProgramToolStripMenuItem.Click += new System.EventHandler(this.newProgramToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
             // 
             // schedulesToolStripMenuItem
             // 
@@ -126,14 +130,14 @@
             // newScheduleToolStripMenuItem
             // 
             this.newScheduleToolStripMenuItem.Name = "newScheduleToolStripMenuItem";
-            this.newScheduleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newScheduleToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.newScheduleToolStripMenuItem.Text = "&New";
             this.newScheduleToolStripMenuItem.Click += new System.EventHandler(this.newScheduleToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(95, 6);
             // 
             // tabPage1
             // 
@@ -155,20 +159,6 @@
             this.tabControl1.Size = new System.Drawing.Size(704, 417);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // programToolStripMenuItem
-            // 
-            this.programToolStripMenuItem.Name = "programToolStripMenuItem";
-            this.programToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.programToolStripMenuItem.Text = "&Program";
-            this.programToolStripMenuItem.Click += new System.EventHandler(this.programToolStripMenuItem_Click);
-            // 
-            // scheduleToolStripMenuItem
-            // 
-            this.scheduleToolStripMenuItem.Name = "scheduleToolStripMenuItem";
-            this.scheduleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.scheduleToolStripMenuItem.Text = "&Schedule";
-            this.scheduleToolStripMenuItem.Click += new System.EventHandler(this.scheduleToolStripMenuItem_Click);
             // 
             // SchedulerForm
             // 
@@ -193,7 +183,6 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem programsToolStripMenuItem;
@@ -204,8 +193,8 @@
         private System.Windows.Forms.ToolStripMenuItem schedulesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newScheduleToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem programToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem scheduleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newProgramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
    
     }
 }

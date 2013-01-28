@@ -22,7 +22,7 @@ namespace VixenModules.App.LightShowScheduler.Controls
             }
             lstBox.SelectedItem = item;
         }
-         
+
         internal static void MoveSelectedItemDown(this ListBox lstBox)
         {
 
@@ -52,26 +52,23 @@ namespace VixenModules.App.LightShowScheduler.Controls
             }
 
         }
-     
-        internal static void RemoveSelectedItem(this ListBox from )
+
+        internal static void RemoveSelectedItem(this ListBox from)
         {
             if (from.SelectedItem != null)
             {
-                
+
                 from.Items.Remove(from.SelectedItem);
             }
 
         }
 
-        internal static void CopySelectedItemToListBox(this ListBox from, ListBox to )
+        internal static void CopySelectedItemToListBox(this ListBox from, ListBox to)
         {
             if (from.SelectedItem != null)
             {
-                    to.Items.Add(from.SelectedItem);
-
-                    from.Items.Remove(from.SelectedItem);
+                to.Items.Add(from.SelectedItem);
             }
-
         }
     }
 }

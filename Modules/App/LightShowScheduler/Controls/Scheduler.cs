@@ -44,6 +44,12 @@ namespace VixenModules.App.LightShowScheduler.Controls
             _scheduledItem.Name = this.txtScheduleName.Text;
             _scheduledItem.StartDate = this.dteStartDate.Value;
             _scheduledItem.EndDate = this.dteEndDate.Value;
+            _scheduledItem.Programs = new List<string>();
+            foreach (var item in this.lstPlayList.Items)
+            {
+                _scheduledItem.Programs.Add(item.DynamicCast<string>());
+
+            }
         }
 
         public Scheduler(ScheduleItem show)
@@ -58,6 +64,7 @@ namespace VixenModules.App.LightShowScheduler.Controls
             this.dteEndDate.Value = ScheduledItem.EndDate;
             this.dteStartDate.Value = ScheduledItem.StartDate;
             this.timeFrame1.TimeFrames = ScheduledItem.ToTimeSpanArray();
+            ScheduledItem.Programs.ForEach(p => this.lstPlayList.Items.Add(p));
         }
 
         private void btnMoveRight_Click(object sender, EventArgs e)
