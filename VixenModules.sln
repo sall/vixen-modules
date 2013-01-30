@@ -170,7 +170,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericSerial", "Modules\Ou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DimmingCurve", "Modules\PostFilter\DimmingCurve\DimmingCurve.csproj", "{C80B084A-064A-422C-B66E-58AB9ED7B32C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightShowScheduler", "Modules\App\LightShowScheduler\LightShowScheduler.csproj", "{D3DF0606-86A8-44C3-93DD-2F5C306EDB40}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VixenScheduler", "Modules\App\LightShowScheduler\VixenScheduler.csproj", "{D3DF0606-86A8-44C3-93DD-2F5C306EDB40}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
