@@ -6,5 +6,6 @@ _ReSharper*
 *.exe.*
 *.user
 *.suo
+*.sln
 /Output
 /Release
