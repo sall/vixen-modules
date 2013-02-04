@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("ListViewGroup", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("ListViewGroup", System.Windows.Forms.HorizontalAlignment.Left);
 			this.listViewControllers = new System.Windows.Forms.ListView();
 			this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -62,10 +62,10 @@
             this.columnHeader2,
             this.columnHeader3});
 			this.listViewControllers.FullRowSelect = true;
-			listViewGroup1.Header = "ListViewGroup";
-			listViewGroup1.Name = "listViewGroup1";
+			listViewGroup2.Header = "ListViewGroup";
+			listViewGroup2.Name = "listViewGroup1";
 			this.listViewControllers.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1});
+            listViewGroup2});
 			this.listViewControllers.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.listViewControllers.HideSelection = false;
 			this.listViewControllers.Location = new System.Drawing.Point(12, 12);
@@ -244,8 +244,10 @@
 			// 
 			// ConfigControllers
 			// 
+			this.AcceptButton = this.buttonOk;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.CancelButton = this.buttonCancel;
 			this.ClientSize = new System.Drawing.Size(419, 482);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.groupBoxSelectedController);
@@ -261,6 +263,7 @@
 			this.Name = "ConfigControllers";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Controllers Configuration";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ConfigControllers_FormClosing);
 			this.Load += new System.EventHandler(this.ConfigControllers_Load);
 			this.groupBoxSelectedController.ResumeLayout(false);
 			this.groupBoxSelectedController.PerformLayout();
