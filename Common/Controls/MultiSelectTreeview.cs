@@ -76,6 +76,7 @@ namespace Common.Controls
 		// to avoid sorting the list every time.
 		private bool _delaySortingSelectedNodes = false;
 		private bool _clickedNodeWasInBounds = false;
+		private bool _selectedNodeWithControlKey = false;
 		#endregion
 
 
@@ -290,10 +291,12 @@ namespace Common.Controls
 						// the initial click was 'valid' (ie. wasn't subject to the dodgy treenode full-width issue)
 						_clickedNodeWasInBounds = true;
 
-						if (ModifierKeys == Keys.None && (m_SelectedNodes.Contains(node))) {
+						if ((ModifierKeys == Keys.None || ModifierKeys == Keys.Control) && (m_SelectedNodes.Contains(node))) {
 							// Potential Drag Operation
 							// Let Mouse Up do select
 						} else {
+							if (ModifierKeys == Keys.Control)
+								_selectedNodeWithControlKey = true;
 							SelectNode(node);
 						}
 					}
@@ -332,6 +335,8 @@ namespace Common.Controls
 				{
 					if (ModifierKeys == Keys.None && m_SelectedNodes.Contains(node) && e.Button != MouseButtons.Right && _clickedNodeWasInBounds)
 						SelectNode(node);
+					if (ModifierKeys == Keys.Control && !_selectedNodeWithControlKey)
+						SelectNode(node);
 				}
 
 				base.OnMouseUp(e);
@@ -340,6 +345,7 @@ namespace Common.Controls
 			{
 				HandleException(ex);
 			}
+			_selectedNodeWithControlKey = false;
 		}
 
 		protected override void OnItemDrag(ItemDragEventArgs e)
