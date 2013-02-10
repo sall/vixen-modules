@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace VixenModules.App.SimpleSchedule {
 	[DataContract]
+    [KnownType(typeof(ScheduledItem))]
 	public class ScheduledItem : IScheduledItem {
 		public ScheduledItem(Guid id, string itemFilePath, int dayOfWeek, TimeSpan startTime, TimeSpan runLength) {
 			Id = id;

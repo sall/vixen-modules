@@ -285,6 +285,9 @@
   <ItemGroup>
     <None Include="Resources\delete-24.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\..\Users\Darren\Documents\Vixen\Sequences\bmps\SmallStar.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
