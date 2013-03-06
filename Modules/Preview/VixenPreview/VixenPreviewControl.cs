@@ -458,7 +458,10 @@ namespace VixenModules.Preview.VixenPreview
             fp.Lock();
             foreach (DisplayItem displayItem in DisplayItems)
             {
-                displayItem.Shape.Draw(fp);
+                if (_editMode)
+                    displayItem.Shape.Draw(fp, Color.White);
+                else
+                    displayItem.Shape.Draw(fp);
             }
             fp.Unlock(true);
 

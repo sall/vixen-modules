@@ -226,6 +226,22 @@ namespace VixenModules.Preview.VixenPreview.Shapes
             }
         }
 
+        public void Draw(FastPixel fp, Color color)
+        {
+            foreach (PreviewPixel pixel in Pixels)
+            {
+                pixel.Draw(fp, color);
+            }
+
+            if (_selectPoints != null)
+            {
+                foreach (PreviewPoint point in _selectPoints)
+                {
+                    fp.DrawRectangle(new Rectangle(point.X - (SelectPointSize / 2), point.Y - (SelectPointSize / 2), SelectPointSize, SelectPointSize), Color.White);
+                }
+            }
+        }
+        
         public void Draw(FastPixel fp)
         {
             foreach (PreviewPixel pixel in Pixels)

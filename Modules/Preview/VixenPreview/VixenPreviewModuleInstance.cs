@@ -175,37 +175,42 @@ namespace VixenModules.Preview.VixenPreview
         //bool _updating = false;
         protected override void Update()
         {
-        Stopwatch timer = new Stopwatch();
-        timer.Start();
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
 
-        // Vixen tells us when to turn lights ON, but not when to turn them off.
-        // We turn all the lights OFF and then turn just the ones one that Vixen tells us to
-        // in the next step. 
-        // This takes some time -- and there's got to be a better way!
-        previewForm.ResetColors();
+            // Vixen tells us when to turn lights ON, but not when to turn them off.
+            // We turn all the lights OFF and then turn just the ones one that Vixen tells us to
+            // in the next step. 
+            // This takes some time -- and there's got to be a better way!
+            //previewForm.ResetColors();
 
-        foreach (var channelIntentState in ElementStates)
-        {
-            var elementId = channelIntentState.Key;
-            Element element = VixenSystem.Elements.GetElement(elementId);
-            if (element == null) continue;
-            ElementNode node = VixenSystem.Elements.GetElementNodeForElement(element);
-            if (node == null) continue;
+            PreviewPixel.IntentNodeToColor.Clear();
 
-            foreach (IIntentState<LightingValue> intentState in channelIntentState.Value)
+            foreach (var channelIntentState in ElementStates)
             {
-                Color c = intentState.GetValue().GetAlphaChannelIntensityAffectedColor();
-                previewForm.UpdateColors(node, c);
+                var elementId = channelIntentState.Key;
+                Element element = VixenSystem.Elements.GetElement(elementId);
+                if (element == null) continue;
+                ElementNode node = VixenSystem.Elements.GetElementNodeForElement(element);
+                if (node == null) continue;
+
+                foreach (IIntentState<LightingValue> intentState in channelIntentState.Value)
+                {
+                    //Color c = intentState.GetValue().GetAlphaChannelIntensityAffectedColor();
+                    //previewForm.UpdateColors(node, c);
+
+                    if (!PreviewPixel.IntentNodeToColor.ContainsKey(node))
+                        PreviewPixel.IntentNodeToColor.Add(node, intentState.GetValue().GetAlphaChannelIntensityAffectedColor());
+                }
             }
-        }
 
-        //previewForm.RefreshPreview();
-        timer.Stop();
+            //previewForm.RefreshPreview();
+            timer.Stop();
 
-        VixenPreviewControl.updateCount += 1;
-        VixenPreviewControl.lastUpdateTime = timer.ElapsedMilliseconds;
-        VixenPreviewControl.totalUpdateTime += timer.ElapsedMilliseconds;
-        VixenPreviewControl.averageUpdateTime = VixenPreviewControl.totalUpdateTime / VixenPreviewControl.updateCount;
+            VixenPreviewControl.updateCount += 1;
+            VixenPreviewControl.lastUpdateTime = timer.ElapsedMilliseconds;
+            VixenPreviewControl.totalUpdateTime += timer.ElapsedMilliseconds;
+            VixenPreviewControl.averageUpdateTime = VixenPreviewControl.totalUpdateTime / VixenPreviewControl.updateCount;
         }
 
     }

@@ -142,8 +142,14 @@ namespace VixenModules.Preview.VixenPreview
             preview.LoadBackground(Data.BackgroundFileName);
             Top = Data.Top;
             Left = Data.Left;
-            Width = Math.Min(Data.Width, MinimumSize.Width);
-            Height = Math.Min(Data.Height, MinimumSize.Height);
+            if (Data.Width > MinimumSize.Width)
+                Width = Data.Width;
+            else
+                Width = MinimumSize.Width;
+            if (Data.Height > MinimumSize.Height)
+                Height = Data.Height;
+            else
+                Height = MinimumSize.Height;
         }
 
         public void Save()

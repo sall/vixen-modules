@@ -27,7 +27,10 @@ namespace VixenModules.Preview.VixenPreview.Shapes
         private Guid _nodeId;
 
         //static Hashtable brushes = new Hashtable();
-        static Dictionary<Int32, Brush> brushes = new Dictionary<Int32, Brush>();
+        //static Dictionary<Int32, Brush> brushes = new Dictionary<Int32, Brush>();
+
+        //public static Hashtable IntentNodeToColor = new Hashtable();
+        public static Dictionary<ElementNode, Color> IntentNodeToColor = new Dictionary<ElementNode, Color>();
 
         public PreviewPixel(int xPosition, int yPositoin, int pixelSize)
         {
@@ -131,12 +134,24 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 
         public void Draw(FastPixel fp)
         {
-            fp.SetPixel(drawArea.Left, drawArea.Top, color);
+            //fp.SetPixel(drawArea.Left, drawArea.Top, color);
+
+            if (IntentNodeToColor.TryGetValue(Node, out color))
+                Draw(fp, color);
+
+            //Object c = IntentNodeToColor[_node];
+            //if (c != null)
+            //{
+            //    Draw(fp, (Color)c);
+            //}
         }
 
         public void Draw(FastPixel fp, Color newColor)
         {
             fp.SetPixel(drawArea.Left, drawArea.Top, newColor);
+            fp.SetPixel(drawArea.Left, drawArea.Top+1, newColor);
+            fp.SetPixel(drawArea.Left, drawArea.Top, newColor);
+            fp.SetPixel(drawArea.Left+1, drawArea.Top, newColor);
         }
     }
 }
