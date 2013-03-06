@@ -376,18 +376,16 @@ namespace VixenModules.Preview.VixenPreview
 
         private void VixenPreviewControl_Resize(object sender, EventArgs e)
         {
-            lock (bufferedGraphics)
-            {
-                // Re-create the graphics buffer for a new window size.
-                context.MaximumBuffer = new Size(this.Width + 1, this.Height + 1);
-                if (bufferedGraphics != null)
-                {
-                    bufferedGraphics.Dispose();
-                    bufferedGraphics = null;
-                }
-                bufferedGraphics = context.Allocate(this.CreateGraphics(),
-                    new Rectangle(0, 0, this.Width, this.Height));
-            }
+                //// Re-create the graphics buffer for a new window size.
+                //context.MaximumBuffer = new Size(this.Width + 1, this.Height + 1);
+                //if (bufferedGraphics != null)
+                //{
+                //    bufferedGraphics.Dispose();
+                //    bufferedGraphics = null;
+                //}
+                //bufferedGraphics = context.Allocate(this.CreateGraphics(),
+                //    new Rectangle(0, 0, this.Width, this.Height));
+            AllocateGraphicsBuffer();
         }
 
         private void VixenPreviewControl_SizeChanged(object sender, EventArgs e)
