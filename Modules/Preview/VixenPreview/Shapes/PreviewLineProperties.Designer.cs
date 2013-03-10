@@ -37,14 +37,14 @@
             this.radioMono = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.listLinkedElements = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label4 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.buttonLinkElements = new System.Windows.Forms.Button();
             this.treeElements = new System.Windows.Forms.TreeView();
-            this.listLinkedElements = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.numericLightCount)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -166,6 +166,31 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Element Links";
             // 
+            // listLinkedElements
+            // 
+            this.listLinkedElements.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.listLinkedElements.FullRowSelect = true;
+            this.listLinkedElements.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listLinkedElements.HideSelection = false;
+            this.listLinkedElements.Location = new System.Drawing.Point(235, 43);
+            this.listLinkedElements.Name = "listLinkedElements";
+            this.listLinkedElements.Size = new System.Drawing.Size(208, 287);
+            this.listLinkedElements.TabIndex = 6;
+            this.listLinkedElements.UseCompatibleStateImageBehavior = false;
+            this.listLinkedElements.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "#";
+            this.columnHeader1.Width = 25;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Element";
+            this.columnHeader2.Width = 150;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -211,31 +236,6 @@
             this.treeElements.TabIndex = 0;
             this.treeElements.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeElements_AfterSelect);
             this.treeElements.DoubleClick += new System.EventHandler(this.treeElements_DoubleClick);
-            // 
-            // listLinkedElements
-            // 
-            this.listLinkedElements.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-            this.listLinkedElements.FullRowSelect = true;
-            this.listLinkedElements.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listLinkedElements.HideSelection = false;
-            this.listLinkedElements.Location = new System.Drawing.Point(235, 43);
-            this.listLinkedElements.Name = "listLinkedElements";
-            this.listLinkedElements.Size = new System.Drawing.Size(208, 287);
-            this.listLinkedElements.TabIndex = 6;
-            this.listLinkedElements.UseCompatibleStateImageBehavior = false;
-            this.listLinkedElements.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "#";
-            this.columnHeader1.Width = 25;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Element";
-            this.columnHeader2.Width = 150;
             // 
             // PreviewLineProperties
             // 

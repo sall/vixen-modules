@@ -55,14 +55,13 @@ namespace VixenModules.Preview.VixenPreview
 
         private void toolStripSelect_Click(object sender, EventArgs e)
         {
-            toolStripLightString.Checked = false;
+            SelectEditToolbarButton(sender as ToolStripButton);
             preview.CurrentTool = VixenPreviewControl.Tools.Select;
         }
 
         private void toolStripLightString_Click(object sender, EventArgs e)
         {
-            toolStripSelect.Checked = false;
-            toolStripLightString.Checked = true;
+            SelectEditToolbarButton(sender as ToolStripButton);
             preview.CurrentTool = VixenPreviewControl.Tools.String;
         }
 
@@ -97,26 +96,49 @@ namespace VixenModules.Preview.VixenPreview
 
         private void toolStripButtonArch_Click(object sender, EventArgs e)
         {
-            toolStripSelect.Checked = false;
-            toolStripLightString.Checked = false;
-            toolStripButtonArch.Checked = true;
+            SelectEditToolbarButton(sender as ToolStripButton);
             preview.CurrentTool = VixenPreviewControl.Tools.Arch;
         }
 
         private void toolStripButtonEditMode_Click(object sender, EventArgs e)
         {
             bool EditMode = !toolStripButtonEditMode.Checked;
-            if (EditMode)
+
+            foreach (ToolStripButton item in toolStrip.Items)
             {
-                Console.WriteLine("Edit Mode On");
-                toolStripButtonEditMode.Checked = true;
+                if (item.Tag != null && item.Tag.ToString().StartsWith("Edit"))
+                {
+                    item.Enabled = EditMode;
+                }
             }
-            else
-            {
-                Console.WriteLine("Edit Mode Off");
-                toolStripButtonEditMode.Checked = false;
-            }
+
             preview.EditMode = EditMode;
+            toolStripButtonEditMode.Checked = EditMode;
+        }
+
+        void SelectEditToolbarButton(ToolStripButton button)
+        {
+            foreach (ToolStripButton item in toolStrip.Items)
+            {
+                if (item.Tag != null && item.Tag.ToString().StartsWith("Edit")) 
+                    item.Checked = (item == button);
+            }
+        }
+
+        void SelectEditToolbarButton(string tool)
+        {
+            foreach (ToolStripButton item in toolStrip.Items)
+            {
+                if (item.Tag != null) {
+                    string toolStr = item.Tag.ToString().Substring(4);
+                    {
+                        if (toolStr == tool)
+                        {
+                            SelectEditToolbarButton(item);
+                        }
+                    }
+                }
+            }
         }
 
         //double totalRenderTime = 0;
@@ -124,7 +146,7 @@ namespace VixenModules.Preview.VixenPreview
         double lastRenderTime = 0;
         private void timerRenderPreview_Tick(object sender, EventArgs e)
         {
-            //timerRenderPreview.Stop();
+            timerRenderPreview.Stop();
             
             Stopwatch timer = new Stopwatch();
             timer.Start();
@@ -134,22 +156,30 @@ namespace VixenModules.Preview.VixenPreview
             //totalRenderCount += 1;
             //totalRenderTime += timer.ElapsedMilliseconds;
 
-            //timerRenderPreview.Start();
+            timerRenderPreview.Start();
         }
 
         public void Setup()
         {
             preview.LoadBackground(Data.BackgroundFileName);
+            
             Top = Data.Top;
+            
             Left = Data.Left;
+            
             if (Data.Width > MinimumSize.Width)
                 Width = Data.Width;
             else
                 Width = MinimumSize.Width;
+            
             if (Data.Height > MinimumSize.Height)
                 Height = Data.Height;
             else
                 Height = MinimumSize.Height;
+
+            //if (Data.BackgroundAlpha == 0)
+            //    Data.BackgroundAlpha = 255;
+            scrollBackgroundAlpha.Value = Data.BackgroundAlpha;
         }
 
         public void Save()
@@ -158,6 +188,7 @@ namespace VixenModules.Preview.VixenPreview
             Data.Left = Left;
             Data.Width = Width;
             Data.Height = Height;
+            //Data.BackgroundAlpha = scrollBackgroundAlpha.Value;
         }
 
         int lightCount = 75;
@@ -271,8 +302,49 @@ namespace VixenModules.Preview.VixenPreview
             {
                 Data.BackgroundFileName = dialogSelectBackground.FileName;
                 preview.LoadBackground(dialogSelectBackground.FileName);
+                scrollBackgroundAlpha.Value = scrollBackgroundAlpha.Maximum;
+                //preview.BackgroundAlpha = scrollBackgroundAlpha.Value;
             }
         }
 
+        private void VixenPreviewSetup_Load(object sender, EventArgs e)
+        {
+            //ToolStripLabel label = new ToolStripLabel("Background Intensity:")
+            //label.Spring
+            //statusStrip1.Items.Add(label);
+
+            ToolStripControlHost host = new ToolStripControlHost(scrollBackgroundAlpha);
+            statusStrip1.Items.Add(host);
+        }
+
+        private void scrollBackgroundAlpha_ValueChanged(object sender, EventArgs e)
+        {
+            //preview.BackgroundAlpha = scrollBackgroundAlpha.Maximum - scrollBackgroundAlpha.Value;
+            preview.BackgroundAlpha = scrollBackgroundAlpha.Value;
+        }
+
+        private void toolStripButtonRectangle_Click(object sender, EventArgs e)
+        {
+            SelectEditToolbarButton(sender as ToolStripButton);
+            preview.CurrentTool = VixenPreviewControl.Tools.Rectangle;
+        }
+
+        private void toolStripButtonSingleLight_Click(object sender, EventArgs e)
+        {
+            SelectEditToolbarButton(sender as ToolStripButton);
+            preview.CurrentTool = VixenPreviewControl.Tools.Single;
+        }
+
+        private void toolStripButtonEllipse_Click(object sender, EventArgs e)
+        {
+            SelectEditToolbarButton(sender as ToolStripButton);
+            preview.CurrentTool = VixenPreviewControl.Tools.Ellipse;
+        }
+
+        private void preview_MouseUp(object sender, MouseEventArgs e)
+        {
+            //MessageBox.Show("MouseUp");
+            SelectEditToolbarButton(preview.CurrentTool.ToString());
+        }
     }
 }

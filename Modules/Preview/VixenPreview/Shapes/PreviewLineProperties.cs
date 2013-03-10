@@ -27,7 +27,8 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 
         private void PreviewLineProperties_Load(object sender, EventArgs e)
         {
-            PopulateElements();
+            //PopulateElements();
+            PreviewTools.PopulateElementTree(treeElements);
 
             numericLightCount.Value = _line.PixelCount;
 
@@ -39,34 +40,34 @@ namespace VixenModules.Preview.VixenPreview.Shapes
             }
         }
 
-        // 
-        // Add the root nodes to the Display Element tree
-        //
-        private void PopulateElements()
-        {
-            foreach (ElementNode channel in VixenSystem.Nodes.GetRootNodes())
-            {
-                AddNodeToElementTree(treeElements.Nodes, channel);
-            }
-        }
+        //// 
+        //// Add the root nodes to the Display Element tree
+        ////
+        //private void PopulateElements()
+        //{
+        //    foreach (ElementNode channel in VixenSystem.Nodes.GetRootNodes())
+        //    {
+        //        AddNodeToElementTree(treeElements.Nodes, channel);
+        //    }
+        //}
 
-        // 
-        // Add each child Display Element or Display Element Group to the tree
-        // 
-        private void AddNodeToElementTree(TreeNodeCollection collection, ElementNode channelNode)
-        {
-            TreeNode addedNode = new TreeNode();
-            addedNode.Name = channelNode.Id.ToString();
-            addedNode.Text = channelNode.Name;
-            addedNode.Tag = channelNode;
+        //// 
+        //// Add each child Display Element or Display Element Group to the tree
+        //// 
+        //private void AddNodeToElementTree(TreeNodeCollection collection, ElementNode channelNode)
+        //{
+        //    TreeNode addedNode = new TreeNode();
+        //    addedNode.Name = channelNode.Id.ToString();
+        //    addedNode.Text = channelNode.Name;
+        //    addedNode.Tag = channelNode;
 
-            collection.Add(addedNode);
+        //    collection.Add(addedNode);
 
-            foreach (ElementNode childNode in channelNode.Children)
-            {
-                AddNodeToElementTree(addedNode.Nodes, childNode);
-            }
-        }
+        //    foreach (ElementNode childNode in channelNode.Children)
+        //    {
+        //        AddNodeToElementTree(addedNode.Nodes, childNode);
+        //    }
+        //}
 
         private void treeElements_DoubleClick(object sender, EventArgs e)
         {

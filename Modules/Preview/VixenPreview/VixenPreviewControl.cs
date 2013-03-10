@@ -35,7 +35,10 @@ namespace VixenModules.Preview.VixenPreview
         {
             Select,
             String,
-            Arch
+            Arch,
+            Rectangle,
+            Ellipse,
+            Single
         }
 
         //private List<PreviewBaseShape> _displayItems = new List<PreviewBaseShape>();
@@ -53,8 +56,20 @@ namespace VixenModules.Preview.VixenPreview
         private bool _editMode = false;
 
         private Image _background;
+        private Bitmap _alphaBackground;
+        //private int _backgroundAlpha = 255;
 
         private VixenPreviewData _data;
+
+        public int BackgroundAlpha
+        {
+            get { return Data.BackgroundAlpha; }
+            set
+            {
+                Data.BackgroundAlpha = value;
+                SetupBackgroundAlphaImage();
+            }
+        }
 
         public bool EditMode
         {
@@ -133,6 +148,7 @@ namespace VixenModules.Preview.VixenPreview
                 try
                 {
                     _background = Image.FromFile(fileName);
+                    Console.WriteLine(fileName);
                 }
                 catch (Exception ex)
                 {
@@ -143,6 +159,23 @@ namespace VixenModules.Preview.VixenPreview
             else
             {
                 _background = new Bitmap(640, 480);
+            }
+
+            SetupBackgroundAlphaImage();
+        }
+
+        private void SetupBackgroundAlphaImage()
+        {
+            if (_background != null)
+            {
+                Console.WriteLine("alpha: " + BackgroundAlpha);
+                _alphaBackground = new Bitmap(_background.Width, _background.Height);
+                using (Graphics gfx = Graphics.FromImage(_alphaBackground))
+                using (SolidBrush brush = new SolidBrush(Color.FromArgb(255-BackgroundAlpha, 0, 0, 0)))
+                {
+                    gfx.DrawImage(_background, 0, 0, _background.Width, _background.Height);
+                    gfx.FillRectangle(brush, 0, 0, _alphaBackground.Width, _alphaBackground.Height);
+                }
             }
         }
 
@@ -278,6 +311,35 @@ namespace VixenModules.Preview.VixenPreview
                     _mouseCaptured = true;
                     //}
                 }
+                else if (_currentTool == Tools.Rectangle)
+                {
+                    DisplayItem newDisplayItem = new DisplayItem();
+                    newDisplayItem.Shape = new PreviewRectangle(new PreviewPoint(e.X, e.Y));
+                    AddDisplayItem(newDisplayItem);
+                    selectedDisplayItem = newDisplayItem;
+                    selectedDisplayItem.Shape.PixelSize = 3;
+                    selectedDisplayItem.Shape.Select();
+                    selectedDisplayItem.Shape.SelectDefaultSelectPoint();
+                    dragStart.X = e.X;
+                    dragStart.Y = e.Y;
+                    Capture = true;
+                    _mouseCaptured = true;
+                    //}
+                }
+                else if (_currentTool == Tools.Single)
+                {
+                    DisplayItem newDisplayItem = new DisplayItem();
+                    newDisplayItem.Shape = new PreviewSingle(new PreviewPoint(e.X, e.Y));
+                    AddDisplayItem(newDisplayItem);
+                    selectedDisplayItem = newDisplayItem;
+                    selectedDisplayItem.Shape.PixelSize = 3;
+                    selectedDisplayItem.Shape.Select();
+                    selectedDisplayItem.Shape.SelectDefaultSelectPoint();
+                    dragStart.X = e.X;
+                    dragStart.Y = e.Y;
+                    Capture = true;
+                    _mouseCaptured = true;
+                }
             }
         }
 
@@ -333,7 +395,16 @@ namespace VixenModules.Preview.VixenPreview
                 _mouseCaptured = false;
                 if (_currentTool != Tools.Select)
                 {
-                    _currentTool = Tools.Select;
+                    // If control is pressed, deselect the shape and immediately allow drawing another shape
+                    if ((Control.ModifierKeys & Keys.Control) != 0)
+                    {
+                        selectedDisplayItem.Shape.Deselect();
+                        selectedDisplayItem = null;
+                    }
+                    else
+                    {
+                        _currentTool = Tools.Select;
+                    }
                 }
             }
             else if (e.Button == System.Windows.Forms.MouseButtons.Right)
@@ -467,9 +538,11 @@ namespace VixenModules.Preview.VixenPreview
 
             // First, draw our background image opaque
             bufferedGraphics.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
-            bufferedGraphics.Graphics.DrawImage(_background, 0, 0, _background.Width, _background.Height);
-            // Now, draw our "pixel" image using alpha blending
+            //bufferedGraphics.Graphics.DrawImage(_background, 0, 0, _background.Width, _background.Height);
+            bufferedGraphics.Graphics.DrawImage(_alphaBackground, 0, 0, fp.Width, fp.Height);
+
             bufferedGraphics.Graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+            // Now, draw our "pixel" image using alpha blending
             bufferedGraphics.Graphics.DrawImage(fp.Bitmap, 0, 0, fp.Width, fp.Height);
 
             bufferedGraphics.Render(Graphics.FromHwnd(this.Handle));
