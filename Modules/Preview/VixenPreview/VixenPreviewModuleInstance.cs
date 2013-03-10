@@ -18,24 +18,10 @@ namespace VixenModules.Preview.VixenPreview
     public partial class VixenPreviewModuleInstance : FormPreviewModuleInstanceBase
     {
         VixenPreviewSetup previewForm;
-        //VixenPreviewSetup setupForm;
-        //VixenPreviewData _data;
 
         public VixenPreviewModuleInstance()
         {
         }
-
-        //public override Vixen.Module.IModuleDataModel ModuleData
-        //{
-        //    get
-        //    {
-        //        return _data;
-        //    }
-        //    set
-        //    {
-        //        _data = value as VixenPreviewData;
-        //    }
-        //}
 
         private void VixenPreviewModuleInstance_Load(object sender, EventArgs e)
         {
@@ -71,9 +57,7 @@ namespace VixenModules.Preview.VixenPreview
         public delegate void RefreshDelegate();
         public void RefreshDelegateMethod()
         {
-            //DebugTimer t2 = new DebugTimer();
             previewForm.RefreshPreview();
-            //t2.StopDebugTimer("t2");
         }
 
         public override bool HasSetup

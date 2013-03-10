@@ -24,6 +24,7 @@ namespace VixenModules.Preview.VixenPreview
         private int _top, _left, _width, _height;
         private List<DisplayItem> _displayItems = new List<DisplayItem>();
         private string _backgroundFileName;
+        private int _backgroundAlpha = 255;
 
         public VixenPreviewData()
         {
@@ -38,6 +39,13 @@ namespace VixenModules.Preview.VixenPreview
                 Height = 800
             };
             return result;
+        }
+
+        [DataMember]
+        public int BackgroundAlpha
+        {
+            get { return _backgroundAlpha; }
+            set { _backgroundAlpha = value; }
         }
 
         [DataMember]

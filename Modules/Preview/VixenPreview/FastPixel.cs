@@ -212,4 +212,29 @@ public class FastPixel
             SetPixel(rect.Left + rect.Width, y + rect.Top, color);
         }
     }
+
+    public void DrawCircle(Rectangle rect, Color color)
+    {
+        Bitmap b = new Bitmap(rect.Width, rect.Height);
+        Graphics g = Graphics.FromImage(b);
+        //g.Clear(Color.Black);
+        g.Clear(Color.Transparent);
+        SolidBrush brush = new SolidBrush(color);
+        g.FillEllipse(brush, new Rectangle(0, 0, rect.Width-1, rect.Height-1));
+        //b = new Bitmap(rect.Width, rect.Height, g);
+        FastPixel fp = new FastPixel(b);
+        fp.Lock();
+        for (int x = 0; x < rect.Width; x++)
+        {
+            for (int y = 0; y < rect.Height; y++)
+            {
+                //Console.WriteLine("x:" + x + " y:" + y + "   " + fp.GetPixel(x, y).R);
+
+                Color newColor = fp.GetPixel(x, y);
+                if (newColor.A != 0)
+                    SetPixel(new Point(rect.Left + x, rect.Top + y), newColor);
+            }
+        }
+        fp.Unlock(true);
+    }
 }

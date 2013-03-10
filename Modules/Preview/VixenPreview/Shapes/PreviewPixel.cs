@@ -25,6 +25,7 @@ namespace VixenModules.Preview.VixenPreview.Shapes
         private Rectangle drawArea;
         private ElementNode _node = null;
         private Guid _nodeId;
+        private int _maxAlpha = 255;
 
         //static Hashtable brushes = new Hashtable();
         //static Dictionary<Int32, Brush> brushes = new Dictionary<Int32, Brush>();
@@ -39,6 +40,18 @@ namespace VixenModules.Preview.VixenPreview.Shapes
             size = pixelSize;
             brush = new SolidBrush(Color.White);
             Resize();
+        }
+
+        [DataMember]
+        public int MaxAlpha
+        {
+            get 
+            {
+                if (_maxAlpha == 0)
+                    _maxAlpha = 255;
+                return _maxAlpha; 
+            }
+            set { _maxAlpha = value; }
         }
 
         [DataMember]
@@ -106,7 +119,11 @@ namespace VixenModules.Preview.VixenPreview.Shapes
         public int PixelSize
         {
             get { return size; }
-            set { size = value; }
+            set { 
+                size = value;
+                Resize();
+
+            }
         }
 
         [DataMember]
@@ -116,42 +133,51 @@ namespace VixenModules.Preview.VixenPreview.Shapes
             set
             {
                 color = value;
-                //if (!PreviewPixel.brushes.TryGetValue(color.ToArgb(), out brush))
-                //{
-                //    brush = new SolidBrush(color);
-                //    PreviewPixel.brushes.Add(color.ToArgb(), brush);
-                //}
             }
         }
 
         public void Draw(Graphics graphics)
         {            
-            //graphics.FillRectangle(brush, drawArea);
             if (color != Color.Transparent) 
                 graphics.FillEllipse(brush, drawArea);
-            //graphics.Fill
         }
 
         public void Draw(FastPixel fp)
         {
-            //fp.SetPixel(drawArea.Left, drawArea.Top, color);
-
-            if (IntentNodeToColor.TryGetValue(Node, out color))
-                Draw(fp, color);
-
-            //Object c = IntentNodeToColor[_node];
-            //if (c != null)
-            //{
-            //    Draw(fp, (Color)c);
-            //}
+            if (Node != null)
+            {
+                if (IntentNodeToColor.TryGetValue(Node, out color))
+                {
+                    Draw(fp, color);
+                }
+            }
         }
 
         public void Draw(FastPixel fp, Color newColor)
         {
-            fp.SetPixel(drawArea.Left, drawArea.Top, newColor);
-            fp.SetPixel(drawArea.Left, drawArea.Top+1, newColor);
-            fp.SetPixel(drawArea.Left, drawArea.Top, newColor);
-            fp.SetPixel(drawArea.Left+1, drawArea.Top, newColor);
+            if (newColor.A > 0)
+            {
+                if (PixelSize <= 3)
+                {
+                    fp.SetPixel(drawArea.Left, drawArea.Top, newColor);
+                    fp.SetPixel(drawArea.Left, drawArea.Top + 1, newColor);
+                    fp.SetPixel(drawArea.Left, drawArea.Top, newColor);
+                    fp.SetPixel(drawArea.Left + 1, drawArea.Top, newColor);
+                }
+                else
+                {
+                    if (MaxAlpha != 255)
+                    {
+                        double newAlpha = ((double)newColor.A / 255) * (double)MaxAlpha;
+                        Color outColor = Color.FromArgb((int)newAlpha, newColor.R, newColor.G, newColor.B);
+                        fp.DrawCircle(drawArea, outColor);
+                    }
+                    else
+                    {
+                        fp.DrawCircle(drawArea, newColor);
+                    }
+                }
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 namespace VixenModules.Preview.VixenPreview.Shapes
 {
     [DataContract]
-    public class PreviewCircle: PreviewBaseShape
+    public class PreviewEllipse: PreviewBaseShape
     {
         [DataMember]
         private PreviewPoint p1;
@@ -18,7 +18,7 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 
         private PreviewPoint p1Start, p2Start;
 
-        public PreviewCircle(PreviewPoint topLeft, PreviewPoint bottomRight, int lightCount, double shapeAspect)
+        public PreviewEllipse(PreviewPoint topLeft, PreviewPoint bottomRight, int lightCount, double shapeAspect)
         {
             p1 = topLeft;
             p2 = bottomRight;

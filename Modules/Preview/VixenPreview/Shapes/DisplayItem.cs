@@ -11,6 +11,10 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 {
     [DataContract]
     [KnownType(typeof(PreviewLine))]
+    [KnownType(typeof(PreviewEllipse))]
+    [KnownType(typeof(PreviewArch))]
+    [KnownType(typeof(PreviewRectangle))]
+    [KnownType(typeof(PreviewSingle))]
     public class DisplayItem
     {
         private PreviewBaseShape _shape;
