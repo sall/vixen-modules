@@ -16,6 +16,11 @@ SetCompressorDictSize 64
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
 
+; for logging
+!define LVM_GETITEMCOUNT 0x1004
+!define LVM_GETITEMTEXT 0x102D
+
+
 ; MUI 1.67 compatible ------
 ;!include "MUI.nsh"
 
@@ -35,7 +40,16 @@ SetCompressorDictSize 64
 !insertmacro MUI_PAGE_WELCOME
 ; License page
 !insertmacro MUI_PAGE_LICENSE "license.txt"
+; Release notes page
+!define MUI_PAGE_HEADER_TEXT "Release notes"
+!define MUI_PAGE_HEADER_SUBTEXT "Short summary of changes for each version ${PRODUCT_NAME_FULL}."
+!define MUI_LICENSEPAGE_TEXT_TOP "Press Page Down to see the rest of the release notes file."
+!define MUI_LICENSEPAGE_TEXT_BOTTOM "When you have finished reading, click on Next to proceed."
+!define MUI_LICENSEPAGE_BUTTON $(^NextBtn)
+!insertmacro MUI_PAGE_LICENSE "..\Release\releasenotes.txt"
+
 ; Directory page
+DirText "Setup will install ${PRODUCT_NAME_FULL} in the following folder. $\n$\nTo install in a different folder (such as a USB Drive), click Browse and select another folder. $\nWhen ready, click next to continue."
 !insertmacro MUI_PAGE_DIRECTORY
 ; Start menu page
 var ICONS_GROUP
@@ -161,6 +175,10 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
+  ; Write out the install log
+  StrCpy $0 "$INSTDIR\vixen3-install.log"
+  Push $0
+  Call DumpLog
 SectionEnd
 
 
@@ -273,6 +291,50 @@ Section Uninstall
   
   SetAutoClose true
 SectionEnd
+
+
+
+
+Function DumpLog
+  Exch $5
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $6
+
+  FindWindow $0 "#32770" "" $HWNDPARENT
+  GetDlgItem $0 $0 1016
+  StrCmp $0 0 exit
+  FileOpen $5 $5 "w"
+  StrCmp $5 "" exit
+    SendMessage $0 ${LVM_GETITEMCOUNT} 0 0 $6
+    System::Alloc ${NSIS_MAX_STRLEN}
+    Pop $3
+    StrCpy $2 0
+    System::Call "*(i, i, i, i, i, i, i, i, i) i \
+      (0, 0, 0, 0, 0, r3, ${NSIS_MAX_STRLEN}) .r1"
+    loop: StrCmp $2 $6 done
+      System::Call "User32::SendMessageA(i, i, i, i) i \
+        ($0, ${LVM_GETITEMTEXT}, $2, r1)"
+      System::Call "*$3(&t${NSIS_MAX_STRLEN} .r4)"
+      FileWrite $5 "$4$\r$\n"
+      IntOp $2 $2 + 1
+      Goto loop
+    done:
+      FileClose $5
+      System::Free $1
+      System::Free $3
+  exit:
+    Pop $6
+    Pop $4
+    Pop $3
+    Pop $2
+    Pop $1
+    Pop $0
+    Exch $5
+FunctionEnd
 
 
 
