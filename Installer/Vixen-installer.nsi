@@ -129,7 +129,7 @@ Section "Application" SEC01
   ;All users Icons
   CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_NAME} Lights Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
 
-  SetShellVarContext all		; scope is "All Users"
+  ;SetShellVarContext all		; scope is "All Users"
   CreateShortCut "$DESKTOP\${PRODUCT_NAME_FULL}.lnk" "$INSTDIR\VixenApplication.exe"
   !insertmacro MUI_STARTMENU_WRITE_END
 
@@ -247,7 +247,11 @@ Section Uninstall
   Delete /REBOOTOK "$INSTDIR\Common\Controls.dll"
   Delete /REBOOTOK "$INSTDIR\Common\BaseSequence.dll"
 
-  Delete "$DESKTOP\${PRODUCT_NAME_FULL}.lnk"
+  Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk"
+  Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Website.lnk"
+  Delete /REBOOTOK "$DESKTOP\${PRODUCT_NAME_FULL}.lnk"
+  Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Vixen.lnk"
+
   RMDir /r /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP"
   ; Here we force removing the directories... Clean it up!
   RMDir /r /REBOOTOK "$INSTDIR\Modules"
