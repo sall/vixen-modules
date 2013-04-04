@@ -39,7 +39,7 @@ SetCompressorDictSize 64
 ; Start menu page
 var ICONS_GROUP
 !define MUI_STARTMENUPAGE_NODISABLE
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER "Vixen"
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "Vixen3"
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT "${PRODUCT_UNINST_ROOT_KEY}"
 !define MUI_STARTMENUPAGE_REGISTRY_KEY "${PRODUCT_UNINST_KEY}"
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "${PRODUCT_STARTMENU_REGVAL}"
@@ -61,8 +61,7 @@ var ICONS_GROUP
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "..\Release\${PRODUCT_NAME}-${PRODUCT_VERSION}-Setup.exe"
-;InstallDir "$PROGRAMFILES\Vixen"
-InstallDir "C:\Vixen"
+InstallDir "$PROGRAMFILES\Vixen3"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -116,10 +115,10 @@ Section "Application" SEC01
   ; Shortcuts
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   CreateDirectory "$SMPROGRAMS\$ICONS_GROUP"
-  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\Vixen.lnk" "$INSTDIR\VixenApplication.exe"
-  CreateShortCut "$DESKTOP\Vixen.lnk" "$INSTDIR\VixenApplication.exe"
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\Vixen 3.lnk" "$INSTDIR\VixenApplication.exe"
+  CreateShortCut "$DESKTOP\Vixen 3.lnk" "$INSTDIR\VixenApplication.exe"
   CreateDirectory "$INSTDIR"
-  CreateShortCut "$QUICKLAUNCH.lnk" "$INSTDIR\VixenApplication.exe"
+  CreateShortCut "$QUICKLAUNCH\Vixen 3.lnk" "$INSTDIR\VixenApplication.exe"
   SetShellVarContext all		; scope is "All Users"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\uninst.exe"
   !insertmacro MUI_STARTMENU_WRITE_END
@@ -246,9 +245,9 @@ Section Uninstall
 
   Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk"
   Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Website.lnk"
-  Delete /REBOOTOK "$QUICKLAUNCH.lnk"
-  Delete /REBOOTOK "$DESKTOP\Vixen.lnk"
-  Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Vixen.lnk"
+  Delete /REBOOTOK "$QUICKLAUNCH\Vixen 3.lnk"
+  Delete /REBOOTOK "$DESKTOP\Vixen 3.lnk"
+  Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Vixen 3.lnk"
 
   RMDir "$SMPROGRAMS\$ICONS_GROUP"
   ; Here we force removing the directories... Clean it up!
