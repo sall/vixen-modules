@@ -7,6 +7,7 @@ SetCompressorDictSize 64
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Vixen"
+!define PRODUCT_NAME_FULL "Vixen 3"
 !define PRODUCT_VERSION "X.X.X.X"
 !define PRODUCT_PUBLISHER "Vixen - Lighting Automation"
 !define PRODUCT_WEB_SITE "http://www.vixenlights.com/"
@@ -39,7 +40,7 @@ SetCompressorDictSize 64
 ; Start menu page
 var ICONS_GROUP
 !define MUI_STARTMENUPAGE_NODISABLE
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER "Vixen3"
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "Vixen 3"
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT "${PRODUCT_UNINST_ROOT_KEY}"
 !define MUI_STARTMENUPAGE_REGISTRY_KEY "${PRODUCT_UNINST_KEY}"
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "${PRODUCT_STARTMENU_REGVAL}"
@@ -61,7 +62,7 @@ var ICONS_GROUP
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "..\Release\${PRODUCT_NAME}-${PRODUCT_VERSION}-Setup.exe"
-InstallDir "$PROGRAMFILES\Vixen3"
+InstallDir "$PROGRAMFILES\Vixen 3"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -112,16 +113,26 @@ Section "Application" SEC01
   SetOutPath "$INSTDIR"
   File /r /x *.res /x *.obj /x *.pch /x *.pdb "..\Release\*.*"
 
+
   ; Shortcuts
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
+  ;CreateDirectory "$SMPROGRAMS\$ICONS_GROUP"
+  ;CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\Vixen 3.lnk" "$INSTDIR\VixenApplication.exe"
+  ;CreateShortCut "$DESKTOP\Vixen 3.lnk" "$INSTDIR\VixenApplication.exe"
+  ;CreateDirectory "$INSTDIR"
+  ;CreateShortCut "$QUICKLAUNCH\Vixen 3.lnk" "$INSTDIR\VixenApplication.exe"
+
   CreateDirectory "$SMPROGRAMS\$ICONS_GROUP"
-  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\Vixen 3.lnk" "$INSTDIR\VixenApplication.exe"
-  CreateShortCut "$DESKTOP\Vixen 3.lnk" "$INSTDIR\VixenApplication.exe"
-  CreateDirectory "$INSTDIR"
-  CreateShortCut "$QUICKLAUNCH\Vixen 3.lnk" "$INSTDIR\VixenApplication.exe"
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_NAME_FULL}.lnk" "$INSTDIR\VixenApplication.exe"
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk" "$INSTDIR\uninst.exe"
+  WriteIniStr "$INSTDIR\${PRODUCT_NAME_FULL}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
+  ;All users Icons
+  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\${PRODUCT_NAME} Lights Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+
   SetShellVarContext all		; scope is "All Users"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\uninst.exe"
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME_FULL}.lnk" "$INSTDIR\VixenApplication.exe"
   !insertmacro MUI_STARTMENU_WRITE_END
+
 
   
   Push $0 ; save
@@ -139,13 +150,6 @@ Section "Application" SEC01
   
 SectionEnd
 
-Section -AdditionalIcons
-  !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
-  WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
-  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk" "$INSTDIR\uninst.exe"
-  !insertmacro MUI_STARTMENU_WRITE_END
-SectionEnd
 
 Section -Post
   WriteUninstaller "$INSTDIR\uninst.exe"
@@ -243,13 +247,8 @@ Section Uninstall
   Delete /REBOOTOK "$INSTDIR\Common\Controls.dll"
   Delete /REBOOTOK "$INSTDIR\Common\BaseSequence.dll"
 
-  Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk"
-  Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Website.lnk"
-  Delete /REBOOTOK "$QUICKLAUNCH\Vixen 3.lnk"
-  Delete /REBOOTOK "$DESKTOP\Vixen 3.lnk"
-  Delete /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP\Vixen 3.lnk"
-
-  RMDir "$SMPROGRAMS\$ICONS_GROUP"
+  Delete "$DESKTOP\${PRODUCT_NAME_FULL}.lnk"
+  RMDir /r /REBOOTOK "$SMPROGRAMS\$ICONS_GROUP"
   ; Here we force removing the directories... Clean it up!
   RMDir /r /REBOOTOK "$INSTDIR\Modules"
   RMDir /r /REBOOTOK "$INSTDIR\Common"
